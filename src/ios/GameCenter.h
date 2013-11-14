@@ -11,5 +11,6 @@
 @interface GameCenter : CDVPlugin
 
 - (void) auth:(CDVInvokedUrlCommand*)command;
+- (void) submitScore:(CDVInvokedUrlCommand*)command;
 
 @end

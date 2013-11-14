@@ -6,6 +6,7 @@
 #import "Cordova/CDV.h"
 #import "Cordova/CDVViewController.h"
 #import "GameCenter.h"
+#import "GKScore.h"
 
 @implementation GameCenter
 
@@ -38,6 +39,50 @@
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     };
+}
+
+- (void) submitScore:(CDVInvokedUrlCommand*)command;
+{
+    NSMutableDictionary *args = [command.arguments objectAtIndex:0];
+    int64_t score = [[args objectForKey:@"score"] integerValue];
+    NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
+    
+    __block CDVPluginResult* pluginResult = nil;
+    
+    // Different methods depending on iOS version
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+    {
+        GKScore *scoreSubmitter = [[GKScore alloc] initWithLeaderboardIdentifier: leaderboardId];
+        scoreSubmitter.value = score;
+        scoreSubmitter.context = 0;
+        
+        NSArray *scores = @[scoreSubmitter];
+        [GKLeaderboard reportScores:scores withCompletionHandler:^(NSError *error) {
+            if (error)
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            }
+            else {
+                [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            }
+        }];
+    }
+    else
+    {
+        GKScore *scoreSubmitter = [[GKScore alloc] initWithCategory:leaderboardId];
+        scoreSubmitter.value = score;
+        
+        [scoreSubmitter reportScoreWithCompletionHandler:^(NSError *error) {
+            if (error)
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            }
+            else {
+                [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            }
+        }];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 @end
