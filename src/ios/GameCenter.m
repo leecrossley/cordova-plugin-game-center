@@ -45,9 +45,9 @@
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     int64_t score = [[args objectForKey:@"score"] integerValue];
     NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
-    
+
     __block CDVPluginResult* pluginResult = nil;
-    
+
     // Different methods depending on iOS version
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
     {
@@ -81,6 +81,21 @@
         }];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) showLeaderboard:(CDVInvokedUrlCommand*)command;
+{
+    NSString *leaderboardId = [command.arguments objectAtIndex:0];
+
+    GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
+    if (gameCenterController != nil)
+    {
+       gameCenterController.gameCenterDelegate = self;
+       gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+       gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeToday;
+       gameCenterController.leaderboardCategory = leaderboardId;
+       [self.viewController presentModalViewController:gameCenterController animated:YES];
+    }
 }
 
 @end
