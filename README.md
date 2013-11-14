@@ -14,11 +14,23 @@ cordova plugin add https://github.com/leecrossley/cordova-plugin-game-center.git
 
 ## Usage
 
-You **do not** need to reference any JavaScript, the Cordova plugin architecture will add a gamecenter object to your root automatically when you build.
+You **do not** need to reference any JavaScript, the Cordova plugin architecture will add a gamecenter object to your root automatically when you build. It will also automatically add the GameKit framework dependency.
 
-Ensure you use the plugin after your deviceready event has been fired.
+### Auth
 
-### // TODO USAGE EXAMPLES
+You should do this as soon as your deviceready event has been fired. The plug handles the various auth scenarios for you.
+
+```
+gamecenter.auth(successCallback, failureCallback);
+```
+
+### Send Score
+
+**Coming soon**
+
+### Show leaderboard
+
+**Coming soon**
 
 ## Platforms
 
