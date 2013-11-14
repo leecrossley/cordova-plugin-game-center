@@ -11,7 +11,9 @@
 
 - (void) auth:(CDVInvokedUrlCommand*)command;
 {
-    GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+    // __weak to avoid retain cycle
+    __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+
     localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
         CDVPluginResult* pluginResult = nil;
         if (viewController != nil)
@@ -35,7 +37,7 @@
             }
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
-    }];
+    };
 }
 
 @end
