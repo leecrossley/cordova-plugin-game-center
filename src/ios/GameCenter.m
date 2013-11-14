@@ -16,21 +16,25 @@
         CDVPluginResult* pluginResult = nil;
         if (viewController != nil)
         {
-            // TODO: this is going to get complicated
+            // Login required
+            [self.viewController presentModalViewController:viewController animated:YES];
         }
-        else if (localPlayer.isAuthenticated)
+        else
         {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            if (localPlayer.isAuthenticated)
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            }
+            else if (error != nil)
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            }
+            else 
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
-        else if (error != nil)
-        {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-        }
-        else 
-        {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        }
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 }
 
