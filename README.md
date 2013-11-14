@@ -40,9 +40,17 @@ gamecenter.submitScore(successCallback, failureCallback, data);
 
 ### Show leaderboard
 
+Launches the native Game Center leaderboard view controller for a given period and leaderboard.
+
 ```
-gamecenter.showLeaderboard(leaderboardId);
+var data = {
+    period: "day",
+    leaderboardId: "board1"
+};
+gamecenter.showLeaderboard(successCallback, failureCallback, data);
 ```
+
+The period options are "day", "week" or "all".
 
 ## Platforms
 

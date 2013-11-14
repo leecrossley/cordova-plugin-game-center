@@ -61,7 +61,7 @@
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
             }
             else {
-                [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
             }
         }];
     }
@@ -76,7 +76,7 @@
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
             }
             else {
-                [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
             }
         }];
     }
@@ -85,17 +85,46 @@
 
 - (void) showLeaderboard:(CDVInvokedUrlCommand*)command;
 {
-    NSString *leaderboardId = [command.arguments objectAtIndex:0];
+    NSMutableDictionary *args = [command.arguments objectAtIndex:0];
+    NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
+    NSString *period = [args objectForKey:@"period"];
+
+    CDVPluginResult* pluginResult = nil;
 
     GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
     if (gameCenterController != nil)
     {
-       gameCenterController.gameCenterDelegate = self;
-       gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
-       gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeToday;
-       gameCenterController.leaderboardCategory = leaderboardId;
-       [self.viewController presentModalViewController:gameCenterController animated:YES];
+        if ([period isEqualToString:@"today"])
+        {
+            gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeToday;
+        }
+        else if ([period isEqualToString:@"week"])
+        {
+            gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeWeek;
+        }
+        else
+        {
+            gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeAllTime;
+        }
+
+        gameCenterController.leaderboardCategory = leaderboardId;
+
+        gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+
+        [self.viewController presentViewController:gameCenterController animated:YES completion:nil];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
+    else
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
+
+- (void) gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
+{
+    [gameCenterViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 @end
