@@ -44,13 +44,13 @@ Launches the native Game Center leaderboard view controller for a given period a
 
 ```
 var data = {
-    period: "day",
+    period: "today",
     leaderboardId: "board1"
 };
 gamecenter.showLeaderboard(successCallback, failureCallback, data);
 ```
 
-The period options are "day", "week" or "all".
+The period options are "today", "week" or "all".
 
 ## Platforms
 
