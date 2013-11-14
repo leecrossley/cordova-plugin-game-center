@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="gamecenter" version="0.2.0">
     <name>Game Center</name>
     <author>Lee Crossley (http://ilee.co.uk/)</author>
-    <description>Cordova Game Center Plugin to utilise the iOS Game Center in your app. There is currently support for authentication, submitting a score to a leaderboard and displaying a native leaderbaord.</description>
+    <description>Cordova Game Center Plugin to utilise the iOS Game Center in your app. There is currently support for authentication, submitting a score to a leaderboard and displaying a native leaderboard.</description>
     <keywords>cordova, game, game center, gamecenter, leaderboard</keywords>
     <engines>
         <engine name="cordova" version=">=3.0" />
