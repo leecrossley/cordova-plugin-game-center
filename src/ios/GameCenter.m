@@ -6,7 +6,6 @@
 #import "Cordova/CDV.h"
 #import "Cordova/CDVViewController.h"
 #import "GameCenter.h"
-#import "GKScore.h"
 
 @implementation GameCenter
 
@@ -56,8 +55,7 @@
         scoreSubmitter.value = score;
         scoreSubmitter.context = 0;
         
-        NSArray *scores = @[scoreSubmitter];
-        [GKLeaderboard reportScores:scores withCompletionHandler:^(NSError *error) {
+        [GKScore reportScores:@[scoreSubmitter] withCompletionHandler:^(NSError *error) {
             if (error)
             {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
