@@ -44,7 +44,7 @@ gamecenter.submitScore(successCallback, failureCallback, data);
 
 ## Platforms
 
-Only support for iOS, as the Game Center is Apple specific.
+Supports iOS 6 and iOS 7 (there are differences in the native implementation). The Game Center is Apple specific and not applicable to other platforms.
 
 ## License
 
