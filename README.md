@@ -9,7 +9,7 @@ Adding Game Center support requires more than simple coding changes. To create a
 ## 1 step install
 
 ```
-cordova plugin add https://github.com/cordova-plugin-game-center.git
+cordova plugin add https://github.com/leecrossley/cordova-plugin-game-center.git
 ```
 
 ## Usage

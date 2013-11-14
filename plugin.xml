@@ -7,17 +7,17 @@
     <engines>
         <engine name="cordova" version=">=3.0" />
     </engines>
-    <js-module src="www/gamecenter.js" name="gamecenter">
+    <js-module src="www/gamecenter.js" name="GameCenter">
         <clobbers target="gamecenter" />
     </js-module>
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
-            <feature name="gamecenter">
-                <param name="ios-package" value="gamecenter" />
+            <feature name="GameCenter">
+                <param name="ios-package" value="GameCenter" />
             </feature>
         </config-file>
-        <header-file src="src/ios/gamecenter.h" />
-        <source-file src="src/ios/gamecenter.m" />
+        <header-file src="src/ios/GameCenter.h" />
+        <source-file src="src/ios/GameCenter.m" />
         <framework src="GameKit.framework" />
     </platform>
 </plugin>
