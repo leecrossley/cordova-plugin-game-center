@@ -11,16 +11,24 @@
 
 - (void) auth:(CDVInvokedUrlCommand*)command;
 {
-    // authenticateWithCompletionHandler is depricated
-    [[GKLocalPlayer localPlayer] authenticateWithCompletionHandler:^(NSError *error) {
+    GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+    localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
         CDVPluginResult* pluginResult = nil;
-        if (error == nil)
+        if (viewController != nil)
+        {
+            // TODO: this is going to get complicated
+        }
+        else if (localPlayer.isAuthenticated)
         {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
         }
-        else
+        else if (error != nil)
         {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+        }
+        else 
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
