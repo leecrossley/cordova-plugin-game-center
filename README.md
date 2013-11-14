@@ -2,7 +2,7 @@
 
 This plugin allows developers to utilise the iOS Game Center in their Cordova / PhoneGap app.
 
-The code under active development and currently only has support for [auth](#auth). Functionality to send scores and show leaderboards will be added very soon.
+The code under active development and currently has support for [auth](#auth) and [submitting a score](#submit-score). Functionality to support showing leaderboards will be added soon.
 
 ### Before you start
 
@@ -26,9 +26,17 @@ You should do this as soon as your deviceready event has been fired. The plug ha
 gamecenter.auth(successCallback, failureCallback);
 ```
 
-### Send Score
+### Submit Score
 
-**Coming soon**
+** Ensure you have had a successful callback from `gamecenter.auth()` first before attempting to submit a score. You should also have set up your leaderboard(s) in iTunes connect and use the leaderboard identifier assigned there as the leaderboardId.
+
+```
+var data = {
+    score: 10,
+    leaderboardId: "board1"
+};
+gamecenter.submitScore(successCallback, failureCallback, data);
+```
 
 ### Show leaderboard
 
