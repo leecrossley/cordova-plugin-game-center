@@ -5,8 +5,8 @@ var GameCenter = function () {
     this.name = "GameCenter";
 };
 
-GameCenter.prototype.authenticate = function (success, failure) {
-    exec(success, failure, "GameCenter", "authenticate", []);
+GameCenter.prototype.auth = function (success, failure) {
+    exec(success, failure, "GameCenter", "auth", []);
 };
 
 module.exports = new GameCenter();

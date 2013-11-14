@@ -18,5 +18,6 @@
         </config-file>
         <header-file src="src/ios/gamecenter.h" />
         <source-file src="src/ios/gamecenter.m" />
+        <framework src="GameKit.framework" />
     </platform>
 </plugin>
