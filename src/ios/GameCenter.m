@@ -109,6 +109,7 @@
 
         gameCenterController.leaderboardCategory = leaderboardId;
 
+        gameCenterController.gameCenterDelegate = self;
         gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
 
         [self.viewController presentViewController:gameCenterController animated:YES completion:nil];
@@ -125,6 +126,5 @@
 {
     [gameCenterViewController dismissViewControllerAnimated:YES completion:nil];
 }
-
 
 @end

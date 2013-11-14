@@ -8,7 +8,7 @@
 #import "GameCenter.h"
 #import "GameKit/GameKit.h"
 
-@interface GameCenter : CDVPlugin
+@interface GameCenter : CDVPlugin <GKGameCenterControllerDelegate>
 
 - (void) auth:(CDVInvokedUrlCommand*)command;
 - (void) submitScore:(CDVInvokedUrlCommand*)command;
