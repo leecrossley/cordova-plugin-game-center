@@ -19,7 +19,7 @@
         if (viewController != nil)
         {
             // Login required
-            [self.viewController presentModalViewController:viewController animated:YES];
+            [self.viewController presentViewController:viewController animated:YES completion:nil];
         }
         else
         {
