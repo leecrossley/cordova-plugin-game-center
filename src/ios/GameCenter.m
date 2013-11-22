@@ -107,10 +107,17 @@
             gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeAllTime;
         }
 
-        gameCenterController.leaderboardCategory = leaderboardId;
-
         gameCenterController.gameCenterDelegate = self;
-        gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+
+        if (leaderboardId.length > 0)
+        {
+            gameCenterController.leaderboardCategory = leaderboardId;
+            gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+        }
+        else
+        {
+            gameCenterController.viewState = GKGameCenterViewControllerStateDefault;
+        }
 
         [self.viewController presentViewController:gameCenterController animated:YES completion:nil];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
