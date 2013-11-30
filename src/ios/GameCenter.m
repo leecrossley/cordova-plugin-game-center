@@ -60,9 +60,11 @@
             {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
             }
-            else {
+            else
+            {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
             }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     }
     else
@@ -75,12 +77,13 @@
             {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
             }
-            else {
+            else
+            {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
             }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     }
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) showLeaderboard:(CDVInvokedUrlCommand*)command;
@@ -106,9 +109,9 @@
         {
             gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeAllTime;
         }
-
+        
         gameCenterController.gameCenterDelegate = self;
-
+        
         if (leaderboardId.length > 0)
         {
             gameCenterController.leaderboardCategory = leaderboardId;
