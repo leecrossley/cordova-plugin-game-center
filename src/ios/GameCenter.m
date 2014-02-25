@@ -86,11 +86,71 @@
     }
 }
 
+- (void) reportAchievement:(CDVInvokedUrlCommand*)command;
+{
+    NSMutableDictionary *args = [command.arguments objectAtIndex:0];
+    NSString *achievementId = [args objectForKey:@"achievementId"];
+    NSString *percent = [args objectForKey:@"percent"];
+
+    float percentFloat = [percent floatValue];
+
+    __block CDVPluginResult* pluginResult = nil;
+    
+    GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier: achievementId];
+    if (achievement)
+    {
+        achievement.percentComplete = percentFloat;
+        achievement.showsCompletionBanner = YES;
+        
+        [achievement reportAchievementWithCompletionHandler:^(NSError *error)
+         {
+             if (error != nil)
+             {
+                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+             } else {
+                 
+                 // Achievement notification banners are broken on IOS7 so we do it manually here:
+                 if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+
+                     [GKNotificationBanner showBannerWithTitle:@"Achievement" message:@"Completed!" completionHandler:^{}];
+                 }
+                 
+                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+             }
+             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
+         }];
+    }
+
+}
+
+
+- (void) resetAchievements:(CDVInvokedUrlCommand*)command;
+{
+    __block CDVPluginResult* pluginResult = nil;
+
+    // Clear all progress saved on Game Center.
+    [GKAchievement resetAchievementsWithCompletionHandler:^(NSError *error)
+     {
+         if (error != nil)
+         {
+             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+         } else {
+             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+         }
+         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
+     }
+    ];
+    
+}
+
 - (void) showLeaderboard:(CDVInvokedUrlCommand*)command;
 {
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
     NSString *period = [args objectForKey:@"period"];
+    NSString *showAchievements = [args objectForKey:@"showAchievements"];
 
     CDVPluginResult* pluginResult = nil;
 
@@ -115,7 +175,14 @@
         if (leaderboardId.length > 0)
         {
             gameCenterController.leaderboardCategory = leaderboardId;
-            gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+            
+            if ([showAchievements isEqualToString:@"true"])
+            {
+                gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
+            }
+            else {
+                gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
+            }
         }
         else
         {
@@ -135,6 +202,30 @@
 - (void) gameCenterViewControllerDidFinish:(GKGameCenterViewController *)gameCenterViewController
 {
     [gameCenterViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void) getAchievements:(CDVInvokedUrlCommand*)command;
+{
+     __block CDVPluginResult* pluginResult = nil;
+     NSMutableArray *earntAchievements = [[NSMutableArray alloc] init];
+
+     [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
+     {
+         if (error == nil)
+         {
+             for (GKAchievement* achievement in achievements)
+             {
+                 [earntAchievements addObject: @"achievement.identifier"];
+             }
+             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: earntAchievements];
+         }
+         else {
+             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+
+         }
+     }];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 @end
