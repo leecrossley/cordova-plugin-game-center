@@ -56,25 +56,28 @@ The period options are "today", "week" or "all".
 
 Reports an achievement to the game center:
 
+```
 var data = {
 	achievementId: "MyAchievementName",
 	percent: "100"
 };
 
 gamecenter.reportAchievement(successCallback, failureCallback, data);
-
+```
 
 ### Reset achievements
 
 Resets the user's achievements and leaderboard.
 
+```
 gamecenter.resetAchievement(successCallback, failureCallback);
-
+```
 
 ### Fetch achievements
 
 Fetches the user's achievements from the game center:
 
+```
 var data = { };
 
 gamecenter.reportAchievement(successCallback, failureCallback, data);
@@ -86,6 +89,7 @@ var successCallback = function(result) {
         }
     }
 }
+```
 
 ## Platforms
 
