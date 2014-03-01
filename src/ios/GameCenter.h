@@ -13,5 +13,8 @@
 - (void) auth:(CDVInvokedUrlCommand*)command;
 - (void) submitScore:(CDVInvokedUrlCommand*)command;
 - (void) showLeaderboard:(CDVInvokedUrlCommand*)command;
+- (void) reportAchievement:(CDVInvokedUrlCommand*)command;
+- (void) resetAchievements:(CDVInvokedUrlCommand*)command;
+- (void) getAchievements:(CDVInvokedUrlCommand*)command;
 
 @end

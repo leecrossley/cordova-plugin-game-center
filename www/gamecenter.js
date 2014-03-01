@@ -1,4 +1,4 @@
-
+cordova.define("gamecenter.GameCenter", function(require, exports, module) {
 var exec = require("cordova/exec");
 
 var GameCenter = function () {
@@ -17,4 +17,17 @@ GameCenter.prototype.showLeaderboard = function (success, failure, data) {
     exec(success, failure, "GameCenter", "showLeaderboard", [data]);
 };
 
+GameCenter.prototype.reportAchievement = function (success, failure, data) {
+    exec(success, failure, "GameCenter", "reportAchievement", [data]);
+};
+               
+GameCenter.prototype.resetAchievements = function (success, failure) {
+    exec(success, failure, "GameCenter", "resetAchievements", []);
+};
+
+GameCenter.prototype.getAchievements = function (success, failure, data) {
+    exec(success, failure, "GameCenter", "getAchievements", []);
+};
+
 module.exports = new GameCenter();
+});

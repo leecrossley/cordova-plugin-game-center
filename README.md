@@ -52,9 +52,50 @@ gamecenter.showLeaderboard(successCallback, failureCallback, data);
 
 The period options are "today", "week" or "all".
 
+### Report achievement
+
+Reports an achievement to the game center:
+
+```
+var data = {
+	achievementId: "MyAchievementName",
+	percent: "100"
+};
+
+gamecenter.reportAchievement(successCallback, failureCallback, data);
+```
+
+### Reset achievements
+
+Resets the user's achievements and leaderboard.
+
+```
+gamecenter.resetAchievement(successCallback, failureCallback);
+```
+
+### Fetch achievements
+
+Fetches the user's achievements from the game center:
+
+```
+var data = { };
+
+gamecenter.reportAchievement(successCallback, failureCallback, data);
+
+var successCallback = function(result) {
+	if (results) {
+    	for (var i=0;i<results.length;i++) {
+			alert('Achievement earnt: " + results[i]);
+        }
+    }
+}
+```
+
 ## Platforms
 
 Supports iOS 6 and iOS 7 (there are differences in the native implementation). The Game Center is Apple specific and not applicable to other platforms.
+
+Achievements functionality only tested on IOS7.
 
 ## License
 
