@@ -215,17 +215,16 @@
          {
              for (GKAchievement* achievement in achievements)
              {
-                 [earntAchievements addObject: achievement.identifier];
+                 [earntAchievements addObject: @"achievement.identifier"];
              }
              pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: earntAchievements];
          }
-         else {
+         else
+         {
              pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-
          }
+         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
      }];
-    
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 @end
