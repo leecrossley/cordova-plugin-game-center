@@ -4,6 +4,10 @@ This plugin allows developers to utilise the iOS Game Center in their Cordova / 
 
 The code under active development and currently has support for [auth](#auth), [submitting a score](#submit-score) and [showing leaderboards](#show-leaderboard) using the native viewcontroller.
 
+#### Live demo
+
+See this plugin working in a live app: http://playadds.com
+
 ### Before you start
 
 Adding Game Center support requires more than simple coding changes. To create a Game Center-aware game, you need to understand these basics before you begin writing code. The full outline of all the Game Center concepts and impacts can be viewed [here](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/GameKit_Guide/GameCenterOverview/GameCenterOverview.html).
