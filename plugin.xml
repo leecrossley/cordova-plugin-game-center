@@ -4,6 +4,7 @@
     <author>Lee Crossley (http://ilee.co.uk/)</author>
     <description>Cordova Game Center Plugin to utilise the iOS Game Center in your app. There is currently support for authentication, submitting a score to a leaderboard and displaying a native leaderboard.</description>
     <keywords>cordova, game, game center, gamecenter, leaderboard</keywords>
+    <license>MIT</license>
     <engines>
         <engine name="cordova" version=">=3.0.0" />
     </engines>
