@@ -14,11 +14,21 @@ Adding Game Center support requires more than simple coding changes. To create a
 
 ## Install
 
+### Locally
+
 ```
 cordova plugin add https://github.com/leecrossley/cordova-plugin-game-center.git
 ```
 
 You **do not** need to reference any JavaScript, the Cordova plugin architecture will add a gamecenter object to your root automatically when you build. It will also automatically add the GameKit framework dependency.
+
+### PhoneGap build
+
+Add the following to your `config.xml` to use version 0.2.6 (you can also omit the version attribute to always use the latest version):
+
+```
+<gap:plugin name="uk.co.ilee.gamecenter" version="0.2.6" />
+```
 
 ## Usage
 
