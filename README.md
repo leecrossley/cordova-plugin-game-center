@@ -37,6 +37,11 @@ Add the following to your `config.xml` to use version 0.2.6 (you can also omit t
 You should do this as soon as your deviceready event has been fired. The plug handles the various auth scenarios for you.
 
 ```
+var successCallback = function(user){
+    alert(user.alias);
+    // user.alias, user.playerID, user.displayName
+};
+
 gamecenter.auth(successCallback, failureCallback);
 ```
 
