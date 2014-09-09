@@ -25,7 +25,12 @@
         {
             if (localPlayer.isAuthenticated)
             {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                NSDictionary* user = @{
+                                       @"alias":localPlayer.alias,
+                                       @"displayName":localPlayer.displayName,
+                                       @"playerID":localPlayer.playerID
+                                       };
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
             }
             else if (error != nil)
             {
@@ -38,6 +43,43 @@
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }
     };
+}
+
+- (void) getPlayerImage:(CDVInvokedUrlCommand*)command;
+{
+    __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+    __block CDVPluginResult* pluginResult = nil;
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                         NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:
+                      @"user.jpg" ];
+
+    // Check if the user photo is cached
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:path];
+    
+    if(fileExists){
+        // Return it if it does
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:path];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }else{
+        // Else load it from the game center
+        [localPlayer loadPhotoForSize:GKPhotoSizeSmall withCompletionHandler:^(UIImage *photo, NSError *error) {
+            
+            if (photo != nil)
+            {
+                NSData* data = UIImageJPEGRepresentation(photo, 0.8);
+                [data writeToFile:path atomically:YES];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:path];
+            }
+            if (error != nil)
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
+    }
 }
 
 - (void) submitScore:(CDVInvokedUrlCommand*)command;
