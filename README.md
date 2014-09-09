@@ -45,6 +45,18 @@ var successCallback = function(user){
 gamecenter.auth(successCallback, failureCallback);
 ```
 
+### Fetch Player Image
+
+Loads the current player's photo. Automatically cached on first retrieval.
+
+```
+var successCallback = function(path){
+    alert(path); // path to .jpg
+};
+
+gamecenter.getPlayerImage(successCallback, failureCallback);
+```
+
 ### Submit Score
 
 Ensure you have had a successful callback from `gamecenter.auth()` first before attempting to submit a score. You should also have set up your leaderboard(s) in iTunes connect and use the leaderboard identifier assigned there as the leaderboardId.
