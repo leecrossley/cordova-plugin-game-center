@@ -37,7 +37,7 @@ Add the following to your `config.xml` to use version 0.2.6 (you can also omit t
 You should do this as soon as your deviceready event has been fired. The plug handles the various auth scenarios for you.
 
 ```
-var successCallback = function(user){
+var successCallback = function (user) {
     alert(user.alias);
     // user.alias, user.playerID, user.displayName
 };
@@ -50,7 +50,7 @@ gamecenter.auth(successCallback, failureCallback);
 Loads the current player's photo. Automatically cached on first retrieval.
 
 ```
-var successCallback = function(path){
+var successCallback = function (path) {
     alert(path); // path to .jpg
 };
 
@@ -115,8 +115,8 @@ gamecenter.reportAchievement(successCallback, failureCallback, data);
 
 var successCallback = function(result) {
 	if (results) {
-    	for (var i=0;i<results.length;i++) {
-			alert('Achievement earnt: " + results[i]);
+    	for (var i = 0; i < results.length; i += 1) {
+			alert("Achievement earned: " + results[i]);
         }
     }
 }
