@@ -25,7 +25,12 @@
         {
             if (localPlayer.isAuthenticated)
             {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                NSDictionary* user = @{
+                                       @"alias":localPlayer.alias,
+                                       @"displayName":localPlayer.displayName,
+                                       @"playerID":localPlayer.playerID
+                                       };
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
             }
             else if (error != nil)
             {
