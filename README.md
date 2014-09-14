@@ -101,7 +101,7 @@ gamecenter.reportAchievement(successCallback, failureCallback, data);
 Resets the user's achievements and leaderboard.
 
 ```
-gamecenter.resetAchievement(successCallback, failureCallback);
+gamecenter.resetAchievements(successCallback, failureCallback);
 ```
 
 ### Fetch achievements
