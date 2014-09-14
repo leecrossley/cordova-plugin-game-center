@@ -111,12 +111,12 @@ Fetches the user's achievements from the game center:
 ```
 var data = { };
 
-gamecenter.reportAchievement(successCallback, failureCallback, data);
+gamecenter.getAchievements(successCallback, failureCallback, data);
 
 var successCallback = function(result) {
 	if (results) {
     	for (var i=0;i<results.length;i++) {
-			alert('Achievement earnt: " + results[i]);
+			alert('Achievement earnt: ' + results[i]);
         }
     }
 }
