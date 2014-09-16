@@ -101,7 +101,7 @@ gamecenter.reportAchievement(successCallback, failureCallback, data);
 Resets the user's achievements and leaderboard.
 
 ```
-gamecenter.resetAchievement(successCallback, failureCallback);
+gamecenter.resetAchievements(successCallback, failureCallback);
 ```
 
 ### Fetch achievements
@@ -111,12 +111,12 @@ Fetches the user's achievements from the game center:
 ```
 var data = { };
 
-gamecenter.reportAchievement(successCallback, failureCallback, data);
+gamecenter.getAchievements(successCallback, failureCallback, data);
 
 var successCallback = function(result) {
 	if (results) {
     	for (var i = 0; i < results.length; i += 1) {
-			alert("Achievement earned: " + results[i]);
+            alert("Achievement earned: " + results[i]);
         }
     }
 }
