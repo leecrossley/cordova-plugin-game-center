@@ -116,7 +116,12 @@ gamecenter.getAchievements(successCallback, failureCallback, data);
 var successCallback = function(result) {
 	if (results) {
     	for (var i = 0; i < results.length; i += 1) {
-            alert("Achievement earned: " + results[i]);
+    		console.log("identifier", results[i].identifier;
+    		console.log("percentComplete", results[i].percentComplete;
+    		console.log("completed", results[i].completed;
+    		console.log("lastReportedDate", results[i].lastReportedDate;
+    		console.log("showsCompletionBanner", results[i].showsCompletionBanner;
+    		console.log("playerID", results[i].playerID;
         }
     }
 }
