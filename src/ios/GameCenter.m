@@ -249,7 +249,7 @@
 - (void) getAchievements:(CDVInvokedUrlCommand*)command;
 {
      __block CDVPluginResult* pluginResult = nil;
-     NSMutableArray *earntAchievements = [[NSMutableArray alloc] init];
+     NSMutableArray *earntAchievements = [NSMutableArray array];
 
      [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
      {
@@ -257,7 +257,15 @@
          {
              for (GKAchievement* achievement in achievements)
              {
-                 [earntAchievements addObject: achievement.identifier];
+                 NSMutableDictionary *entry = [NSMutableDictionary dictionary];
+                 entry[@"identifier"] = achievement.identifier;
+                 entry[@"percentComplete"] = [NSNumber numberWithDouble: achievement.percentComplete];
+                 entry[@"completed"] = [NSNumber numberWithBool:achievement.completed];
+                 entry[@"lastReportedDate"] = [NSNumber numberWithDouble:[achievement.lastReportedDate timeIntervalSince1970] * 1000];
+                 entry[@"showsCompletionBanner"] = [NSNumber numberWithBool:achievement.showsCompletionBanner];
+                 entry[@"playerID"] = achievement.playerID;
+                 
+                 [earntAchievements addObject:entry];
              }
              pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: earntAchievements];
          }
