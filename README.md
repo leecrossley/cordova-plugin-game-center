@@ -109,9 +109,7 @@ gamecenter.resetAchievements(successCallback, failureCallback);
 Fetches the user's achievements from the game center:
 
 ```
-var data = { };
-
-gamecenter.getAchievements(successCallback, failureCallback, data);
+gamecenter.getAchievements(successCallback, failureCallback);
 
 var successCallback = function(result) {
 	if (results) {
