@@ -24,10 +24,10 @@ You **do not** need to reference any JavaScript, the Cordova plugin architecture
 
 ### PhoneGap build
 
-Add the following to your `config.xml` to use version 0.2.6 (you can also omit the version attribute to always use the latest version):
+Add the following to your `config.xml` to use version 0.2.9 (you can also omit the version attribute to always use the latest version):
 
 ```
-<gap:plugin name="uk.co.ilee.gamecenter" version="0.2.6" />
+<gap:plugin name="uk.co.ilee.gamecenter" version="0.2.9" />
 ```
 
 ## Usage
