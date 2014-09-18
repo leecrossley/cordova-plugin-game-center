@@ -29,7 +29,7 @@ GameCenter.prototype.resetAchievements = function (success, failure) {
     exec(success, failure, "GameCenter", "resetAchievements", []);
 };
 
-GameCenter.prototype.getAchievements = function (success, failure, data) {
+GameCenter.prototype.getAchievements = function (success, failure) {
     exec(success, failure, "GameCenter", "getAchievements", []);
 };
 

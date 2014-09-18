@@ -24,10 +24,10 @@ You **do not** need to reference any JavaScript, the Cordova plugin architecture
 
 ### PhoneGap build
 
-Add the following to your `config.xml` to use version 0.2.6 (you can also omit the version attribute to always use the latest version):
+Add the following to your `config.xml` to use version 0.2.9 (you can also omit the version attribute to always use the latest version):
 
 ```
-<gap:plugin name="uk.co.ilee.gamecenter" version="0.2.6" />
+<gap:plugin name="uk.co.ilee.gamecenter" version="0.2.9" />
 ```
 
 ## Usage
@@ -109,14 +109,19 @@ gamecenter.resetAchievements(successCallback, failureCallback);
 Fetches the user's achievements from the game center:
 
 ```
-var data = { };
-
-gamecenter.getAchievements(successCallback, failureCallback, data);
+gamecenter.getAchievements(successCallback, failureCallback);
 
 var successCallback = function(result) {
 	if (results) {
     	for (var i = 0; i < results.length; i += 1) {
-            alert("Achievement earned: " + results[i]);
+    		console.log("{");
+    		console.log("	identifier:", results[i].identifier);
+    		console.log("	percentComplete:", results[i].percentComplete);
+    		console.log("	completed:", results[i].completed);
+    		console.log("	lastReportedDate:", results[i].lastReportedDate);
+    		console.log("	showsCompletionBanner:", results[i].showsCompletionBanner);
+    		console.log("	playerID:", results[i].playerID);
+    		console.log("}");
         }
     }
 }
