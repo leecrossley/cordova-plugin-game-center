@@ -36,7 +36,7 @@
             {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
             }
-            else 
+            else
             {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
             }
@@ -49,7 +49,7 @@
 {
     __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
     __block CDVPluginResult* pluginResult = nil;
-    
+
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                          NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -58,7 +58,7 @@
 
     // Check if the user photo is cached
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:path];
-    
+
     if(fileExists){
         // Return it if it does
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:path];
@@ -66,7 +66,7 @@
     }else{
         // Else load it from the game center
         [localPlayer loadPhotoForSize:GKPhotoSizeSmall withCompletionHandler:^(UIImage *photo, NSError *error) {
-            
+
             if (photo != nil)
             {
                 NSData* data = UIImageJPEGRepresentation(photo, 0.8);
@@ -96,7 +96,7 @@
         GKScore *scoreSubmitter = [[GKScore alloc] initWithLeaderboardIdentifier: leaderboardId];
         scoreSubmitter.value = score;
         scoreSubmitter.context = 0;
-        
+
         [GKScore reportScores:@[scoreSubmitter] withCompletionHandler:^(NSError *error) {
             if (error)
             {
@@ -113,7 +113,7 @@
     {
         GKScore *scoreSubmitter = [[GKScore alloc] initWithCategory:leaderboardId];
         scoreSubmitter.value = score;
-        
+
         [scoreSubmitter reportScoreWithCompletionHandler:^(NSError *error) {
             if (error)
             {
@@ -137,26 +137,26 @@
     float percentFloat = [percent floatValue];
 
     __block CDVPluginResult* pluginResult = nil;
-    
+
     GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier: achievementId];
     if (achievement)
     {
         achievement.percentComplete = percentFloat;
         achievement.showsCompletionBanner = YES;
-        
+
         [achievement reportAchievementWithCompletionHandler:^(NSError *error)
          {
              if (error != nil)
              {
                  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
              } else {
-                 
+
                  // Achievement notification banners are broken on IOS7 so we do it manually here:
                  if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
 
                      [GKNotificationBanner showBannerWithTitle:@"Achievement" message:@"Completed!" completionHandler:^{}];
                  }
-                 
+
                  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
              }
              [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -184,7 +184,7 @@
 
      }
     ];
-    
+
 }
 
 - (void) showLeaderboard:(CDVInvokedUrlCommand*)command;
@@ -211,24 +211,21 @@
         {
             gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeAllTime;
         }
-        
+
         gameCenterController.gameCenterDelegate = self;
-        
+
         if (leaderboardId.length > 0)
         {
             gameCenterController.leaderboardCategory = leaderboardId;
-            
-            if ([showAchievements isEqualToString:@"true"])
-            {
-                gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
-            }
-            else {
-                gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
-            }
+        }
+
+        if ([showAchievements isEqualToString:@"true"])
+        {
+            gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
         }
         else
         {
-            gameCenterController.viewState = GKGameCenterViewControllerStateDefault;
+            gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
         }
 
         [self.viewController presentViewController:gameCenterController animated:YES completion:nil];
@@ -264,7 +261,7 @@
                  entry[@"lastReportedDate"] = [NSNumber numberWithDouble:[achievement.lastReportedDate timeIntervalSince1970] * 1000];
                  entry[@"showsCompletionBanner"] = [NSNumber numberWithBool:achievement.showsCompletionBanner];
                  entry[@"playerID"] = achievement.playerID;
-                 
+
                  [earntAchievements addObject:entry];
              }
              pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: earntAchievements];
