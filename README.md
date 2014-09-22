@@ -71,17 +71,16 @@ gamecenter.submitScore(successCallback, failureCallback, data);
 
 ### Show leaderboard
 
-Launches the native Game Center leaderboard view controller for a given period and leaderboard.
+Launches the native Game Center leaderboard view controller for a leaderboard.
 
 ```
 var data = {
-    period: "today",
     leaderboardId: "board1"
 };
 gamecenter.showLeaderboard(successCallback, failureCallback, data);
 ```
 
-The period options are "today", "week" or "all".
+*NB: The period option has been removed in 0.3.0 as it is no longer supported by iOS. The default period is "all time".*
 
 ### Report achievement
 
