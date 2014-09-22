@@ -1,6 +1,6 @@
 //
 //  GameCenter.m
-//  Copyright (c) 2013 Lee Crossley - http://ilee.co.uk
+//  Copyright (c) 2013-2014 Lee Crossley - http://ilee.co.uk
 //
 
 #import "Cordova/CDV.h"
@@ -111,10 +111,10 @@
     }
     else
     {
-        GKScore *scoreSubmitter = [[GKScore alloc] initWithCategory:leaderboardId];
+        GKScore *scoreSubmitter = [[GKScore alloc] initWithLeaderboardIdentifier:leaderboardId];
         scoreSubmitter.value = score;
 
-        [scoreSubmitter reportScoreWithCompletionHandler:^(NSError *error) {
+        [GKScore reportScores:@[scoreSubmitter] withCompletionHandler:^(NSError *error) {
             if (error)
             {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
@@ -144,24 +144,25 @@
         achievement.percentComplete = percentFloat;
         achievement.showsCompletionBanner = YES;
 
-        [achievement reportAchievementWithCompletionHandler:^(NSError *error)
-         {
-             if (error != nil)
-             {
-                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-             } else {
+        NSArray *achievements = [NSArray arrayWithObjects:achievement, nil];
 
-                 // Achievement notification banners are broken on IOS7 so we do it manually here:
-                 if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        [GKAchievement reportAchievements:achievements withCompletionHandler:^(NSError *error) {
+            if (error != nil)
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+            }
+            else
+            {
+                // Achievement notification banners are broken on IOS7 so we do it manually here:
+                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
 
-                     [GKNotificationBanner showBannerWithTitle:@"Achievement" message:@"Completed!" completionHandler:^{}];
-                 }
+                    [GKNotificationBanner showBannerWithTitle:@"Achievement" message:@"Completed!" completionHandler:^{}];
+                }
 
-                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-             }
-             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-
-         }];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            }
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }];
     }
 
 }
@@ -191,7 +192,6 @@
 {
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
-    NSString *period = [args objectForKey:@"period"];
     NSString *showAchievements = [args objectForKey:@"showAchievements"];
 
     CDVPluginResult* pluginResult = nil;
@@ -199,24 +199,11 @@
     GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
     if (gameCenterController != nil)
     {
-        if ([period isEqualToString:@"today"])
-        {
-            gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeToday;
-        }
-        else if ([period isEqualToString:@"week"])
-        {
-            gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeWeek;
-        }
-        else
-        {
-            gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeAllTime;
-        }
-
         gameCenterController.gameCenterDelegate = self;
 
         if (leaderboardId.length > 0)
         {
-            gameCenterController.leaderboardCategory = leaderboardId;
+            gameCenterController.leaderboardIdentifier = leaderboardId;
         }
 
         if ([showAchievements isEqualToString:@"true"])
