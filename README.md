@@ -71,17 +71,16 @@ gamecenter.submitScore(successCallback, failureCallback, data);
 
 ### Show leaderboard
 
-Launches the native Game Center leaderboard view controller for a given period and leaderboard.
+Launches the native Game Center leaderboard view controller for a leaderboard.
 
 ```
 var data = {
-    period: "today",
     leaderboardId: "board1"
 };
 gamecenter.showLeaderboard(successCallback, failureCallback, data);
 ```
 
-The period options are "today", "week" or "all".
+*NB: The period option has been removed in 0.3.0 as it is no longer supported by iOS. The default period is "all time".*
 
 ### Report achievement
 
@@ -109,29 +108,28 @@ gamecenter.resetAchievements(successCallback, failureCallback);
 Fetches the user's achievements from the game center:
 
 ```
-gamecenter.getAchievements(successCallback, failureCallback);
-
-var successCallback = function(result) {
+var successCallback = function (results) {
 	if (results) {
     	for (var i = 0; i < results.length; i += 1) {
-    		console.log("{");
-    		console.log("	identifier:", results[i].identifier);
-    		console.log("	percentComplete:", results[i].percentComplete);
-    		console.log("	completed:", results[i].completed);
-    		console.log("	lastReportedDate:", results[i].lastReportedDate);
-    		console.log("	showsCompletionBanner:", results[i].showsCompletionBanner);
-    		console.log("	playerID:", results[i].playerID);
-    		console.log("}");
+            //results[i].identifier
+            //results[i].percentComplete
+            //results[i].completed
+            //results[i].lastReportedDate
+            //results[i].showsCompletionBanner
+            //results[i].playerID
         }
     }
 }
+
+gamecenter.getAchievements(successCallback, failureCallback);
+
 ```
 
 ## Platforms
 
-Supports iOS 6 and iOS 7 (there are differences in the native implementation). The Game Center is Apple specific and not applicable to other platforms.
+Supports iOS 7 and iOS 8 (may have limited iOS 6 support). The Game Center is Apple specific and not applicable to other platforms.
 
-Achievements functionality only tested on IOS7.
+Please report any [issues](https://github.com/leecrossley/cordova-plugin-game-center/issues/new).
 
 ## License
 
