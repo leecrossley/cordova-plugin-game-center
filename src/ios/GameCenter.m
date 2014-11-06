@@ -133,6 +133,11 @@
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     NSString *achievementId = [args objectForKey:@"achievementId"];
     NSString *percent = [args objectForKey:@"percent"];
+    BOOL showsCompletionBanner = NO;
+    NSString *shows = [args objectForKey:@"showsCompletionBanner"];
+    if (shows != nil){
+        showsCompletionBanner = [shows boolValue];
+    }
 
     float percentFloat = [percent floatValue];
 
@@ -142,7 +147,7 @@
     if (achievement)
     {
         achievement.percentComplete = percentFloat;
-        achievement.showsCompletionBanner = YES;
+        achievement.showsCompletionBanner = showsCompletionBanner;
 
         NSArray *achievements = [NSArray arrayWithObjects:achievement, nil];
 
@@ -259,6 +264,32 @@
          }
          [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
      }];
+}
+
+- (void)loadAchievementDescriptions:(CDVInvokedUrlCommand *)command {
+    __block CDVPluginResult* pluginResult = nil;
+    NSMutableArray *loadedDescriptions = [NSMutableArray array];
+    
+    [GKAchievementDescription loadAchievementDescriptionsWithCompletionHandler:^(NSArray *descriptions, NSError *error){
+        if (error == nil){
+            for (GKAchievementDescription* description in descriptions) {
+                NSMutableDictionary *entry = [NSMutableDictionary dictionary];
+                entry[@"identifier"] = description.identifier;
+                entry[@"title"] = description.title;
+                entry[@"unachievedDescription"] = description.unachievedDescription;
+                entry[@"achievedDescription"] = description.achievedDescription;
+                entry[@"maximumPoints"] = [NSNumber numberWithDouble:description.maximumPoints];
+                entry[@"hidden"] = [NSNumber numberWithBool:description.hidden];
+                entry[@"replayable"] = [NSNumber numberWithBool:description.replayable];
+                
+                [loadedDescriptions addObject:entry];
+            }
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: loadedDescriptions];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        }
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 }
 
 @end
