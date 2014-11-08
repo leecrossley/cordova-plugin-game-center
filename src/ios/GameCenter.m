@@ -132,44 +132,25 @@
 {
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     NSString *achievementId = [args objectForKey:@"achievementId"];
-    NSString *percent = [args objectForKey:@"percent"];
-    BOOL showsCompletionBanner = NO;
-    NSString *shows = [args objectForKey:@"showsCompletionBanner"];
-    if (shows != nil){
-        showsCompletionBanner = [shows boolValue];
-    }
-
-    float percentFloat = [percent floatValue];
-
+    float percentComplete = [[args objectForKey:@"percent"] floatValue];
+    BOOL showsCompletionBanner = [[args objectForKey:@"showsCompletionBanner"] boolValue];
+    
     __block CDVPluginResult* pluginResult = nil;
 
     GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier: achievementId];
-    if (achievement)
-    {
-        achievement.percentComplete = percentFloat;
+    if (achievement) {
+        achievement.percentComplete = percentComplete;
         achievement.showsCompletionBanner = showsCompletionBanner;
 
-        NSArray *achievements = [NSArray arrayWithObjects:achievement, nil];
-
-        [GKAchievement reportAchievements:achievements withCompletionHandler:^(NSError *error) {
-            if (error != nil)
-            {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-            }
-            else
-            {
-                // Achievement notification banners are broken on IOS7 so we do it manually here:
-                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-
-                    [GKNotificationBanner showBannerWithTitle:@"Achievement" message:@"Completed!" completionHandler:^{}];
-                }
-
+        [GKAchievement reportAchievements:@[achievement] withCompletionHandler:^(NSError *error) {
+            if (error == nil) {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            } else {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
             }
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     }
-
 }
 
 
