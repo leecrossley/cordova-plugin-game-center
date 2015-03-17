@@ -153,9 +153,9 @@
             }
             else
             {
-                // Achievement notification banners are broken on IOS7 so we do it manually here:
-                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-
+                // Achievement notification banners are broken on iOS 7 so we do it manually here:
+                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0 && [[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)
+                {
                     [GKNotificationBanner showBannerWithTitle:@"Achievement" message:@"Completed!" completionHandler:^{}];
                 }
 
