@@ -146,7 +146,10 @@
             if (error == nil) {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
             } else {
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                // Achievement notification banners are broken on iOS 7 so we do it manually here:
+                if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0 && [[[UIDevice currentDevice] systemVersion] floatValue] < 8.0) {
+                    [GKNotificationBanner showBannerWithTitle:@"Achievement" message:@"Completed!" completionHandler:^{}];
+                }
             }
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
