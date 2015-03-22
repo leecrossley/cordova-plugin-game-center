@@ -89,7 +89,8 @@ Reports an achievement to the game center:
 ```
 var data = {
 	achievementId: "MyAchievementName",
-	percent: "100"
+	percent: "100",
+	showsCompletionBanner: true
 };
 
 gamecenter.reportAchievement(successCallback, failureCallback, data);
@@ -103,7 +104,7 @@ Resets the user's achievements and leaderboard.
 gamecenter.resetAchievements(successCallback, failureCallback);
 ```
 
-### Fetch achievements
+### Fetch user achievements
 
 Fetches the user's achievements from the game center:
 
@@ -122,6 +123,27 @@ var successCallback = function (results) {
 }
 
 gamecenter.getAchievements(successCallback, failureCallback);
+
+```
+
+### Fetch all achievements with descriptions
+
+```
+var successCallback = function (results) {
+	if (results) {
+    	for (var i = 0; i < results.length; i += 1) {
+            //results[i].identifier
+            //results[i].title
+            //results[i].unachievedDescription
+            //results[i].achievedDescription
+            //results[i].maximumPoints
+            //results[i].hidden
+            //results[i].replayable
+        }
+    }
+}
+
+gamecenter.loadAchievementDescriptions(successCallback, failureCallback);
 
 ```
 

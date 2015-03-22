@@ -33,4 +33,8 @@ GameCenter.prototype.getAchievements = function (success, failure) {
     exec(success, failure, "GameCenter", "getAchievements", []);
 };
 
+GameCenter.prototype.loadAchievementDescriptions = function (success, failure) {
+    exec(success, failure, "GameCenter", "loadAchievementDescriptions", []);
+};
+
 module.exports = new GameCenter();
