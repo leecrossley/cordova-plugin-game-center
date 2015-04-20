@@ -1,6 +1,6 @@
 //
 //  GameCenter.h
-//  Copyright (c) 2013-2014 Lee Crossley - http://ilee.co.uk
+//  Copyright (c) 2013-2015 Lee Crossley - http://ilee.co.uk
 //
 
 #import "Foundation/Foundation.h"
