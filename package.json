@@ -1,0 +1,39 @@
+{
+  "name": "cordova-plugin-game-center",
+  "version": "0.4.0",
+  "author": "Lee Crossley <leee@hotmail.co.uk> (http://ilee.co.uk/)",
+  "description": "Cordova Game Center Plugin to utilise the iOS Game Center in your app. There is currently support for authentication, submitting a score to a leaderboard, displaying a native leaderboard and achievements.",
+  "cordova": {
+    "id": "cordova-plugin-game-center",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leecrossley/cordova-plugin-game-center.git"
+  },
+  "keywords": [
+    "cordova",
+    "game",
+    "game center",
+    "gamecenter",
+    "leaderboard",
+    "player",
+    "achievements",
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leecrossley/cordova-plugin-game-center/issues"
+  },
+  "homepage": "https://github.com/leecrossley/cordova-plugin-game-center#readme"
+}
