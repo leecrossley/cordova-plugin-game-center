@@ -6,7 +6,7 @@ The code under active development and currently has support for [auth](#auth), [
 
 #### Live demo
 
-See this plugin working in a live app: http://playadds.com
+See this plugin working in a live app: [playadds.com](http://playadds.com)
 
 ### Before you start
 
@@ -14,7 +14,13 @@ Adding Game Center support requires more than simple coding changes. To create a
 
 ## Install
 
-### Locally
+#### Latest published version on npm (with Cordova CLI >= 5.0.0)
+
+```
+cordova plugin add cordova-plugin-game-center
+```
+
+#### Latest version from GitHub
 
 ```
 cordova plugin add https://github.com/leecrossley/cordova-plugin-game-center.git
