@@ -9,11 +9,11 @@
 
 @implementation GameCenter
 
-- (void) auth:(CDVInvokedUrlCommand*)command;
+- (void) auth:(CDVInvokedUrlCommand*)command
 {
     // __weak to avoid retain cycle
     __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
-
+    
     localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
         CDVPluginResult* pluginResult = nil;
         if (viewController != nil)
@@ -45,20 +45,20 @@
     };
 }
 
-- (void) getPlayerImage:(CDVInvokedUrlCommand*)command;
+- (void) getPlayerImage:(CDVInvokedUrlCommand*)command
 {
     __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
     __block CDVPluginResult* pluginResult = nil;
-
+    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
                                                          NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *path = [documentsDirectory stringByAppendingPathComponent:
                       @"user.jpg" ];
-
+    
     // Check if the user photo is cached
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:path];
-
+    
     if(fileExists){
         // Return it if it does
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:path];
@@ -66,7 +66,7 @@
     }else{
         // Else load it from the game center
         [localPlayer loadPhotoForSize:GKPhotoSizeSmall withCompletionHandler:^(UIImage *photo, NSError *error) {
-
+            
             if (photo != nil)
             {
                 NSData* data = UIImageJPEGRepresentation(photo, 0.8);
@@ -82,21 +82,21 @@
     }
 }
 
-- (void) submitScore:(CDVInvokedUrlCommand*)command;
+- (void) submitScore:(CDVInvokedUrlCommand*)command
 {
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     int64_t score = [[args objectForKey:@"score"] integerValue];
     NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
-
+    
     __block CDVPluginResult* pluginResult = nil;
-
+    
     // Different methods depending on iOS version
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
     {
         GKScore *scoreSubmitter = [[GKScore alloc] initWithLeaderboardIdentifier: leaderboardId];
         scoreSubmitter.value = score;
         scoreSubmitter.context = 0;
-
+        
         [GKScore reportScores:@[scoreSubmitter] withCompletionHandler:^(NSError *error) {
             if (error)
             {
@@ -113,7 +113,7 @@
     {
         GKScore *scoreSubmitter = [[GKScore alloc] initWithLeaderboardIdentifier:leaderboardId];
         scoreSubmitter.value = score;
-
+        
         [GKScore reportScores:@[scoreSubmitter] withCompletionHandler:^(NSError *error) {
             if (error)
             {
@@ -128,24 +128,24 @@
     }
 }
 
-- (void) reportAchievement:(CDVInvokedUrlCommand*)command;
+- (void) reportAchievement:(CDVInvokedUrlCommand*)command
 {
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     NSString *achievementId = [args objectForKey:@"achievementId"];
     NSString *percent = [args objectForKey:@"percent"];
-
+    
     float percentFloat = [percent floatValue];
-
+    
     __block CDVPluginResult* pluginResult = nil;
-
+    
     GKAchievement *achievement = [[GKAchievement alloc] initWithIdentifier: achievementId];
     if (achievement)
     {
         achievement.percentComplete = percentFloat;
         achievement.showsCompletionBanner = YES;
-
+        
         NSArray *achievements = [NSArray arrayWithObjects:achievement, nil];
-
+        
         [GKAchievement reportAchievements:achievements withCompletionHandler:^(NSError *error) {
             if (error != nil)
             {
@@ -160,20 +160,20 @@
                 {
                     [GKNotificationBanner showBannerWithTitle:@"Achievement" message:@"Completed!" completionHandler:^{}];
                 }
-
+                
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
             }
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         }];
     }
-
+    
 }
 
 
-- (void) resetAchievements:(CDVInvokedUrlCommand*)command;
+- (void) resetAchievements:(CDVInvokedUrlCommand*)command
 {
     __block CDVPluginResult* pluginResult = nil;
-
+    
     // Clear all progress saved on Game Center.
     [GKAchievement resetAchievementsWithCompletionHandler:^(NSError *error)
      {
@@ -184,30 +184,30 @@
              pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
          }
          [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-
+         
      }
-    ];
-
+     ];
+    
 }
 
-- (void) showLeaderboard:(CDVInvokedUrlCommand*)command;
+- (void) showLeaderboard:(CDVInvokedUrlCommand*)command
 {
     NSMutableDictionary *args = [command.arguments objectAtIndex:0];
     NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
     NSString *showAchievements = [args objectForKey:@"showAchievements"];
-
+    
     CDVPluginResult* pluginResult = nil;
-
+    
     GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
     if (gameCenterController != nil)
     {
         gameCenterController.gameCenterDelegate = self;
-
+        
         if (leaderboardId.length > 0)
         {
             gameCenterController.leaderboardIdentifier = leaderboardId;
         }
-
+        
         if ([showAchievements isEqualToString:@"true"])
         {
             gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
@@ -216,7 +216,7 @@
         {
             gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
         }
-
+        
         [self.viewController presentViewController:gameCenterController animated:YES completion:nil];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
@@ -232,12 +232,12 @@
     [gameCenterViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void) getAchievements:(CDVInvokedUrlCommand*)command;
+- (void) getAchievements:(CDVInvokedUrlCommand*)command
 {
-     __block CDVPluginResult* pluginResult = nil;
-     NSMutableArray *earntAchievements = [NSMutableArray array];
-
-     [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
+    __block CDVPluginResult* pluginResult = nil;
+    NSMutableArray *earntAchievements = [NSMutableArray array];
+    
+    [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
      {
          if (error == nil)
          {
@@ -250,7 +250,7 @@
                  entry[@"lastReportedDate"] = [NSNumber numberWithDouble:[achievement.lastReportedDate timeIntervalSince1970] * 1000];
                  entry[@"showsCompletionBanner"] = [NSNumber numberWithBool:achievement.showsCompletionBanner];
                  entry[@"playerID"] = achievement.playerID;
-
+                 
                  [earntAchievements addObject:entry];
              }
              pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: earntAchievements];
@@ -263,4 +263,30 @@
      }];
 }
 
+- (void) getScore:(CDVInvokedUrlCommand*)command
+{
+    __block CDVPluginResult* pluginResult = nil;
+    NSMutableDictionary *args = [command.arguments objectAtIndex:0];
+    NSString *leaderboardId = [args objectForKey:@"leaderboardId"];
+    
+    GKLeaderboard *leaderboardRequest = [[GKLeaderboard alloc] init];
+    leaderboardRequest.identifier = leaderboardId;
+    
+    [leaderboardRequest loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error) {
+        if (error) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        } else if (scores) {
+            GKScore *localPlayerScore = leaderboardRequest.localPlayerScore;
+            
+            NSDictionary* userScore = @{
+                                        @"score": [NSNumber numberWithLongLong:localPlayerScore.value]
+                                        };
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:userScore];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        }
+        
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+}
 @end
