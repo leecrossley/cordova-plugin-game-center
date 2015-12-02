@@ -1,4 +1,4 @@
-## Game Center Plugin for Apache Cordova
+## Game Center Plugin for Apache Cordova [![npm version](https://badge.fury.io/js/cordova-plugin-game-center.svg)](http://badge.fury.io/js/cordova-plugin-game-center)
 
 This plugin allows developers to utilise the iOS Game Center in their Cordova / PhoneGap app.
 
@@ -28,13 +28,15 @@ cordova plugin add https://github.com/leecrossley/cordova-plugin-game-center.git
 
 You **do not** need to reference any JavaScript, the Cordova plugin architecture will add a gamecenter object to your root automatically when you build. It will also automatically add the GameKit framework dependency.
 
-### PhoneGap build
+#### PhoneGap build
 
-Add the following to your `config.xml` to use version 0.2.9 (you can also omit the version attribute to always use the latest version):
+Add the following to your `config.xml` to use version 0.4.1 (you can also omit the version attribute to always use the latest version). You should now use the npm source:
 
 ```
-<gap:plugin name="uk.co.ilee.gamecenter" version="0.2.9" />
+<gap:plugin name="cordova-plugin-game-center" version="0.4.1" source="npm" />
 ```
+
+For more information, see the [PhoneGap build docs](http://docs.build.phonegap.com/en_US/configuring_plugins.md.html#Plugins).
 
 ## Usage
 
