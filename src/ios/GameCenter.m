@@ -47,6 +47,57 @@
     }];
 }
 
+- (void) generateIdentityVerification:(CDVInvokedUrlCommand*)command;
+{
+    [self.commandDelegate runInBackground:^{
+
+        __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+
+        localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
+            CDVPluginResult* pluginResult = nil;
+            if (viewController != nil)
+            {
+                // Login required
+                [self.viewController presentViewController:viewController animated:YES completion:nil];
+            }
+            else
+            {
+                if (localPlayer.isAuthenticated)
+                {
+                    [localPlayer generateIdentityVerificationSignatureWithCompletionHandler:^(NSURL *publicKeyUrl, NSData *signature, NSData *salt, uint64_t timestamp, NSError *error) {
+                        __block CDVPluginResult* pluginResult = nil;
+                        if(error != nil)
+                        {
+                            return; //some sort of error, can't authenticate right now
+                        }
+                        NSDictionary* user = @{
+                               @"playerId":localPlayer.playerID,
+                               @"alias":localPlayer.alias,
+                               @"displayName":localPlayer.displayName,
+                               @"publicKeyUrl":publicKeyUrl,
+                               @"signature":signature,
+                               @"salt":salt,
+                               @"timestamp":@(timestamp)
+                        };
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
+
+                    }];
+
+                }
+                else if (error != nil)
+                {
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                }
+                else
+                {
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+                }
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }
+        };
+    }];
+}
+
 - (void) getPlayerImage:(CDVInvokedUrlCommand*)command;
 {
     __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
@@ -188,7 +239,7 @@
          [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 
      }
-    ];
+     ];
 
 }
 
@@ -236,10 +287,10 @@
 
 - (void) getAchievements:(CDVInvokedUrlCommand*)command;
 {
-     __block CDVPluginResult* pluginResult = nil;
-     NSMutableArray *earntAchievements = [NSMutableArray array];
+    __block CDVPluginResult* pluginResult = nil;
+    NSMutableArray *earntAchievements = [NSMutableArray array];
 
-     [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
+    [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
      {
          if (error == nil)
          {
