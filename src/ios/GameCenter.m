@@ -77,7 +77,8 @@
                                @"publicKeyUrl":publicKeyUrl,
                                @"signature":signature,
                                @"salt":salt,
-                               @"timestamp":@(timestamp)
+                               @"timestamp":@(timestamp),
+                               @"bundleId": [[NSBundle mainBundle] bundleIdentifier]
                         };
                         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
 
