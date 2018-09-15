@@ -13,7 +13,7 @@
 {
     [self.commandDelegate runInBackground:^{
 
-        __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+        GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
 
         localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
             CDVPluginResult* pluginResult = nil;
@@ -47,9 +47,65 @@
     }];
 }
 
+- (void) generateIdentityVerification:(CDVInvokedUrlCommand*)command;
+{
+    [self.commandDelegate runInBackground:^{
+
+        GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+
+        localPlayer.authenticateHandler = ^(UIViewController *viewController, NSError *error) {
+            CDVPluginResult* pluginResult = nil;
+            if (viewController != nil)
+            {
+                // Login required
+                [self.viewController presentViewController:viewController animated:YES completion:nil];
+            }
+            else
+            {
+                if (localPlayer.isAuthenticated)
+                {
+                    [localPlayer generateIdentityVerificationSignatureWithCompletionHandler:^(NSURL *publicKeyUrl, NSData *signature, NSData *salt, uint64_t timestamp, NSError *error) {
+                        __block CDVPluginResult* pluginResult = nil;
+                        if(error != nil)
+                        {
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                        } else {
+                            NSDictionary* user = @{
+                                   @"playerId":localPlayer.playerID,
+                                   @"alias":localPlayer.alias,
+                                   @"displayName":localPlayer.displayName,
+                                   @"publicKeyUrl":[publicKeyUrl absoluteString],
+                                   @"signature":[self base64forData:signature],
+                                   @"salt":[self base64forData:salt],
+                                   @"timestamp":@(timestamp),
+                                   @"bundleId": [[NSBundle mainBundle] bundleIdentifier]
+                            };
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:user];
+                            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                        }
+
+                    }];
+
+                }
+                else if (error != nil)
+                {
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else
+                {
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+            }
+        };
+    }];
+}
+
 - (void) getPlayerImage:(CDVInvokedUrlCommand*)command;
 {
-    __weak GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
+    GKLocalPlayer *localPlayer = [GKLocalPlayer localPlayer];
     __block CDVPluginResult* pluginResult = nil;
 
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
@@ -188,7 +244,7 @@
          [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 
      }
-    ];
+     ];
 
 }
 
@@ -236,10 +292,10 @@
 
 - (void) getAchievements:(CDVInvokedUrlCommand*)command;
 {
-     __block CDVPluginResult* pluginResult = nil;
-     NSMutableArray *earntAchievements = [NSMutableArray array];
+    __block CDVPluginResult* pluginResult = nil;
+    NSMutableArray *earntAchievements = [NSMutableArray array];
 
-     [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
+    [GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *achievements, NSError *error)
      {
          if (error == nil)
          {
@@ -263,6 +319,36 @@
          }
          [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
      }];
+}
+- (NSString*)base64forData:(NSData*)theData {
+    const uint8_t* input = (const uint8_t*)[theData bytes];
+    NSInteger length = [theData length];
+
+    static char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+    NSMutableData* data = [NSMutableData dataWithLength:((length + 2) / 3) * 4];
+    uint8_t* output = (uint8_t*)data.mutableBytes;
+
+    NSInteger i;
+    for (i=0; i < length; i += 3) {
+        NSInteger value = 0;
+        NSInteger j;
+        for (j = i; j < (i + 3); j++) {
+            value <<= 8;
+
+            if (j < length) {
+                value |= (0xFF & input[j]);
+            }
+        }
+
+        NSInteger theIndex = (i / 3) * 4;
+        output[theIndex + 0] =                    table[(value >> 18) & 0x3F];
+        output[theIndex + 1] =                    table[(value >> 12) & 0x3F];
+        output[theIndex + 2] = (i + 1) < length ? table[(value >> 6)  & 0x3F] : '=';
+        output[theIndex + 3] = (i + 2) < length ? table[(value >> 0)  & 0x3F] : '=';
+    }
+
+    return [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
 }
 
 @end

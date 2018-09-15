@@ -40,6 +40,20 @@ For more information, see the [PhoneGap build docs](http://docs.build.phonegap.c
 
 ## Usage
 
+### Auth with Third Party backend
+
+You should do this as soon as your deviceready event has been fired. The plug handles the various auth scenarios for you.
+You need to enable game-center for your app from Itunes Connect
+> Sometimes it's needed to add some dummy leaderboard from game-center tab in itunes connect to make it work
+```
+var successCallback = function (data) {
+    alert(data.alias);
+    // data.alias, data.bundleId, data.displayName, data.playerId, data.publicKeyUrl, data.salt, data.signature, data.timestamp 
+};
+
+gamecenter.generateIdentityVerification(successCallback, failureCallback);
+```
+
 ### Auth
 
 You should do this as soon as your deviceready event has been fired. The plug handles the various auth scenarios for you.
