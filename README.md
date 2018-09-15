@@ -23,7 +23,7 @@ cordova plugin add cordova-plugin-game-center
 #### Latest version from GitHub
 
 ```
-cordova plugin add https://github.com/var77/cordova-plugin-game-center.git
+cordova plugin add https://github.com/leecrossley/cordova-plugin-game-center.git
 ```
 
 You **do not** need to reference any JavaScript, the Cordova plugin architecture will add a gamecenter object to your root automatically when you build. It will also automatically add the GameKit framework dependency.
@@ -37,10 +37,6 @@ Add the following to your `config.xml` to use version 0.4.1 (you can also omit t
 ```
 
 For more information, see the [PhoneGap build docs](http://docs.build.phonegap.com/en_US/configuring_plugins.md.html#Plugins).
-
-**Before building for iOS disable ARC for GameCenter.m file**
-> Project -> Build Phases -> Compile Sources -> Double Click on GameCenter.m -> paste -fno-objc-arc
-![alt Disable ARC](https://user-images.githubusercontent.com/17221195/45549686-abd04580-b839-11e8-88ab-898cb605ba4f.png) 
 
 ## Usage
 
